@@ -42,7 +42,7 @@ class Pinokio {
   //constructor
   Pinokio() {
     pivot[0] = new PVector(width/2, height-50);
-    PVector hm = new PVector(550,500);
+    PVector hm = new PVector(450,550);
     Bez = new Bz(5, 100,hm);
   }
 

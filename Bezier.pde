@@ -37,12 +37,12 @@ class Bz {
   boolean tglPinokio = true;
   PVector home = new PVector();;
 
-  PVector preLastPoint = new PVector(int(random(20,home.x-50)), int(random(home.y-300, home.y+10)));
+  PVector preLastPoint = new PVector(int(random(home.x-200,home.x+30)), int(random(home.y-200, home.y+10)));
+  PVector preFrontPoint = new PVector(int(random(home.x-90,home.x+10)),int(random(home.y-100,home.y+10)));
 
   void setPointRandom(){
     if(tglPinokio){
-      P[0] = new PVector(int(random(home.x-90, home.x+10)),int(random(home.y-100, home.y+10)));
-      P[n-1] = new PVector();
+      P[0] = preFrontPoint;
       P[n-1] = preLastPoint;
 
       for(int i=0; i<n-1; i++){
@@ -51,7 +51,6 @@ class Bz {
 
     }else{
       P[n-1] = new PVector(int(random(home.x-90, home.x+10)), int(random(home.y-100, home.y+10)));
-      P[0] = new PVector();
       P[0] = preLastPoint;
     }
 
@@ -62,6 +61,7 @@ class Bz {
       preLastPoint = P[n-1];
     }else{
       preLastPoint = P[0];
+      preFrontPoint = P[n-1];
     }
     tglPinokio =! tglPinokio;
   }
