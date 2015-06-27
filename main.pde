@@ -4,7 +4,7 @@ import java.awt.*;
 
 
 Pinokio pinokio;
-int buttonNum = 11;
+int buttonNum = 12;
 Button[] button = new Button[buttonNum];
 vis_ana visualize;
 
@@ -38,7 +38,9 @@ void setup() {
   button[7].setName("mem_2.txt");
   button[8].setName("mem_3.txt");
   button[9].setName("mem_4.txt");
+  
   button[10].setName("RESET");
+  button[11].setName("Bezier");
 
 
   //Tracker
@@ -135,6 +137,11 @@ void draw() {
       button[i].on_off(false);
     }
   }
+  if(button[11].sw){
+    pinokio.moveWithBezier();
+  }
+
+
 }
 
 void keyPressed() {

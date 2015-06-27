@@ -36,11 +36,40 @@ class Pinokio {
   float v1, v2, v3;
 
 
+  //Bezier Movement
+  Bz Bez;
 
   //constructor
   Pinokio() {
     pivot[0] = new PVector(width/2, height-50);
+    PVector hm = new PVector(550,500);
+    Bez = new Bz(5, 100,hm);
   }
+
+  //move With Bezier
+  PVector bezierMovement[] = new PVector[100];
+  int bezierCount = 0;
+
+  void setBezierMovement(){
+    Bez.setPointRandom();
+    bezierMovement = Bez.setBezierPoint();
+  }
+
+  void moveWithBezier(){
+   if(bezierCount == 0) setBezierMovement(); 
+
+   Bez.drawBz();
+     angleRoot = map(bezierMovement[bezierCount].x, 0, width, -90, 90);
+     angleWaist = map(bezierMovement[bezierCount].y, 0, height, 10, -150);
+     bezierCount++;
+
+     if(bezierCount == 100){
+       bezierCount = 0;
+     }
+
+  }
+
+
 
 
 

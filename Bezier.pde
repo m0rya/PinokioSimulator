@@ -21,7 +21,84 @@ class Bz {
     R = new PVector[int(fineness)];
     ac = new PVector[n];
   }
+  //Bezier for Pinokio
+  Bz(int _n, int fine,PVector _home) {
+    this.n = _n;
+    P = new PVector[n];
+    setPoint_random();
 
+    fineness = fine;
+    R = new PVector[int(fineness)];
+    ac = new PVector[n];
+    this.home = _home;
+  }
+
+  
+  boolean tglPinokio = true;
+  PVector home = new PVector();;
+
+  PVector preLastPoint = new PVector(int(random(20,home.x-50)), int(random(home.y-300, home.y+10)));
+
+  void setPointRandom(){
+    if(tglPinokio){
+      P[0] = new PVector(int(random(home.x-90, home.x+10)),int(random(home.y-100, home.y+10)));
+      P[n-1] = new PVector();
+      P[n-1] = preLastPoint;
+
+      for(int i=0; i<n-1; i++){
+      P[i+1] = new PVector(int(random(home.x-200,home.x+30)), int(random(home.y-200, home.y+50)));
+      }
+
+    }else{
+      P[n-1] = new PVector(int(random(home.x-90, home.x+10)), int(random(home.y-100, home.y+10)));
+      P[0] = new PVector();
+      P[0] = preLastPoint;
+    }
+
+    for(int i=0; i<n-2; i++){
+      P[i+1] = new PVector(int(random(home.x-200,home.x+30)), int(random(home.y-200, home.y+50)));
+    }
+    if(tglPinokio){
+      preLastPoint = P[n-1];
+    }else{
+      preLastPoint = P[0];
+    }
+    tglPinokio =! tglPinokio;
+  }
+
+  PVector[] setBezierPoint(){
+    int tt;
+    float t = 0.0;
+    float ts = (float)1 / fineness;
+
+    double[] Bt = new double[n];
+
+    noFill();
+    stroke(255);
+
+    for (tt = 0; tt < fineness; tt++) {
+
+      for (int i=0; i<n; i++) {
+
+        Bt[i] = makeBt(i, t);
+      }
+
+      R[tt] = new PVector(0, 0);
+
+      for (int i=0; i<n; i++) {
+        R[tt].x += Bt[i] * P[i].x;
+        R[tt].y += Bt[i] * P[i].y;
+      }
+
+      t += ts;
+    }
+
+    return R;
+
+  }
+
+
+//Bezier
   void setPoint_random() {
     for (int i=0; i<n; i++) {
       P[i] = new PVector(int(random(600)), int(random(600)));
