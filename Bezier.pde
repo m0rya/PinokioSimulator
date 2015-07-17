@@ -31,6 +31,14 @@ class Bz {
     R = new PVector[int(fineness)];
     ac = new PVector[n];
     this.home = _home;
+    
+    /*
+    preLastPoint = new PVector(int(random(home.x-200,home.x+30)), int(random(home.y-200, home.y+10)));
+    preFrontPoint = new PVector(int(random(home.x-90,home.x+10)),int(random(home.y-100,home.y+10)));
+    */
+    
+    preLastPoint = new PVector(int(random(home.x-200,home.x+30)), int(random(home.y-200, home.y+10)));
+    preFrontPoint = new PVector(int(random(home.x-90,home.x+10)),int(random(home.y-100,home.y+10)));
   }
 
   
@@ -46,16 +54,19 @@ class Bz {
       P[n-1] = preLastPoint;
 
       for(int i=0; i<n-1; i++){
-      P[i+1] = new PVector(int(random(home.x-200,home.x+30)), int(random(home.y-200, home.y+50)));
+      //P[i+1] = new PVector(int(random(home.x-200,home.x+30)), int(random(home.y-200, home.y+50)));
+      P[i+1] = new PVector(int(random(width)), int(random(height)));
       }
 
     }else{
-      P[n-1] = new PVector(int(random(home.x-90, home.x+10)), int(random(home.y-100, home.y+10)));
+      //P[n-1] = new PVector(int(random(home.x-90, home.x+10)), int(random(home.y-100, home.y+10)));
+      P[n-1] = new PVector(int(random(width)), int(random(height)));
       P[0] = preLastPoint;
     }
 
     for(int i=0; i<n-2; i++){
-      P[i+1] = new PVector(int(random(home.x-200,home.x+30)), int(random(home.y-200, home.y+50)));
+      //P[i+1] = new PVector(int(random(home.x-200,home.x+30)), int(random(home.y-200, home.y+50)));
+      P[i+1] = new PVector(int(random(width)), int(random(height)));
     }
     if(tglPinokio){
       preLastPoint = P[n-1];
@@ -225,61 +236,13 @@ class Bz {
       if (tt != 0) line(R[tt-1].x, R[tt-1].y, R[tt].x, R[tt].y);
     }
   }
-  boolean flowBz_swt;
+  
 
-  void flowBz() {
-    int tt;
-    int tmp = frameCount%int(fineness);
-    if (flowBz_swt) {
-
-      for (tt = 0; tt<tmp; tt++) {
-        int c = int(map((R[tt].x + R[tt].y)/2, 0, (width+height)/2*0.8, 0, 360));
-        stroke(c, 100, 100);
-        if (tt != 0) line(R[tt-1].x, R[tt-1].y, R[tt].x, R[tt].y);
-      }
-      if (tmp == fineness-1) flowBz_swt =! flowBz_swt;
-    } else {
-      
-      for (tt = int(fineness)-tmp-1; tt>0; tt--) {
-     
-        int c = int(map((R[tt].x + R[tt].y)/2, 0, (width+height)/2*0.8, 0, 360));
-        stroke(c, 100, 100);
-        if (tt != 0) line(R[tt-1].x, R[tt-1].y, R[tt].x, R[tt].y);
-      }
-
-      if (tmp == fineness-1) flowBz_swt =! flowBz_swt;
-    }
-  }
+ 
 
 
-  //mousePointer dragg the point
-  void mouseDragged() {
-    for (int i=0; i<n; i++) {
-      int dis = int(dist(mouseX, mouseY, P[i].x, P[i].y)); 
-      if (dis < 40) {
-        P[i].x = mouseX; 
-        P[i].y = mouseY; 
-        break;
-      }
-    }
-  }
 
-  //set poiont's acc
-  void setAc() {
-    for (int i=0; i<n; i++) {
-      ac[i] = new PVector(); 
-      ac[i].x = int(random(1, 5)); 
-      ac[i].y = int(random(1, 5));
-    }
-  }
 
-  void movingPoint() {
-    for (int i=0; i<n; i++) {
-      P[i].x += ac[i].x; 
-      P[i].y += ac[i].y; 
 
-      if (P[i].x > width || P[i].x < 0) ac[i].x *= -1; 
-      if (P[i].y > height || P[i].y < 0) ac[i].y *= -1;
-    }
-  }
+  
 }

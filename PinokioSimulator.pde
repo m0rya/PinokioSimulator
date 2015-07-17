@@ -46,6 +46,7 @@ class Pinokio {
     Bez = new Bz(5, 100,hm);
   }
 
+
   //move With Bezier
   PVector bezierMovement[] = new PVector[100];
   int bezierCount = 0;
@@ -59,8 +60,8 @@ class Pinokio {
    if(bezierCount == 0) setBezierMovement(); 
 
    Bez.drawBz();
-     angleRoot = map(bezierMovement[bezierCount].x, 0, width, -90, 90);
-     angleWaist = map(bezierMovement[bezierCount].y, 0, height, 10, -150);
+     angleRoot = map(bezierMovement[bezierCount].x, 0, width, -90, 50);
+     angleWaist = map(bezierMovement[bezierCount].y, 0, height, -40, -150);
      bezierCount++;
 
      if(bezierCount == 100){
@@ -84,8 +85,8 @@ class Pinokio {
 
   void interactiveWithMouse() { 
     if(boolInteractiveWithMouse){
-      angleRoot = map(mouseX, 0, width, -90, 90);
-      angleWaist = map(mouseY, 0, height, 10, -150);
+      angleRoot = map(mouseX, 0, width, -90, 50);
+      angleWaist = map(mouseY, 0, height, -40, -150);
       //angleNeck = an;
     } 
   }
@@ -439,7 +440,6 @@ class Pinokio {
 
 
 
-
   void visualizeTxtfile(String s) {
     loadTxtfile(s);
 
@@ -462,8 +462,6 @@ class Pinokio {
       angleNeck += 10;
     }
   }
-
-
 
   ///will
 

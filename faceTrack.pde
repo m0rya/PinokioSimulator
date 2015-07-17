@@ -9,7 +9,7 @@ class Tracker {
     strokeWeight(2);
 
     for (int i=0; i<faces.length; i++) {
-      rect(faces[i].x, faces[i].y + height/2+20, faces[i].width, faces[i].height);
+      rect(faces[i].x, faces[i].y + height/2 + 400, faces[i].width, faces[i].height);
     }
     
     if (faces.length > 0) return true;
