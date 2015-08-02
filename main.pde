@@ -6,7 +6,6 @@ import cc.arduino.*;
 
 
 
-
 Pinokio pinokio;
 int buttonNum = 12;
 Button[] button = new Button[buttonNum];
@@ -23,12 +22,14 @@ Tracker tracker;
 
 //Arduino
 Arduino arduino;
+CArduino ctrlArd;
 
 
-boolean fd = false;
+boolean fd = true;
 
 void setup() {
   size(700, 700);
+  frameRate(30);
   pinokio = new Pinokio();
   visualize = new vis_ana();
 
@@ -53,104 +54,97 @@ void setup() {
 
 
   //Tracker
+
   if (fd) {
     String[] cams = Capture.list();
     for (int i=0; i<cams.length; i++) {
       println(i + " : " + cams[i]);
     }
-    //video = new Capture(this, 400, 300, "UCAM-C0220F", 30);
-    video = new Capture(this, cams[18]);
-    opencv = new OpenCV(this, 400, 300);
-    opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);
+
+    //video = new Capture(this, 400, 300, "UCAM-C0220F #2", 30);
+    video = new Capture(this, 160, 120, "UCAM-C0220F #2", 15);
+
+    //video = new Capture(this, cams[18]);
     video.start();
+    // exit();
+    opencv = new OpenCV(this, 160, 120);
+    opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);
+
     tracker = new Tracker();
+
+    pinokio.setOffInteractiveWithMouse();
+
+    button[11].sw = true;
   }
+
+
+
   //Arduino 
   arduino = new Arduino(this, Arduino.list()[2], 57600);
-  arduino.pinMode(9, Arduino.SERVO);
-  arduino.pinMode(10, Arduino.SERVO);
-  arduino.pinMode(11, Arduino.SERVO);
+  ctrlArd = new CArduino(arduino);
+  ctrlArd.initServo();
+ 
 }
 
 
-int preAng1=0;
-int preAng2 = 0;
-int neckAng=60;
+boolean tracked = false;
+
 void draw() {
-
-
 
   fill(0);
   strokeWeight(5);
   background(255);
 
 
-
   //ARduino
-  int ang1=0;
-  int ang2=0;
-
-  if (frameCount > 10) {
-    ang1 = int(map(pinokio.angleRoot, -90, 50, 30, 140));
-    ang2 = int(map(pinokio.angleWaist, -40, -150, 0, 120));
-    /*
-    if (ang2 >= 60 && ang1 < 150 - ang2) {
-     //background(200, 0, 0, 50);
-     ang1 = preAng1;
-     ang2 = preAng2;
-     }
-     */
-    arduino.servoWrite(9, ang1);
-
-    arduino.servoWrite(11, ang2);
-    //    preAng1 = ang1;
-    //    preAng2 = ang2;
-    if (frameCount % 60 == 0) {
-      neckAng = int(random(50, 140));
-    }
-
-    //println("nAng:" + neckAng);
-    arduino.servoWrite(10, neckAng);
+  if (fd) {
+    opencv.loadImage(video);
+    image(video, 0, height/2);
   }
+  ctrlArd.integrate(opencv, pinokio, button);
+  
+  //ctrlArd.centerNeckBase();
+  //ctrlArd.setNeckBase(30, 160);
 
 
   //PINOKIO
   pinokio.interactiveWithMouse();
-
   pinokio.drawPinokio();
   pinokio.memorizeMovement();
 
 
-
   //VISUALIZER
-
   visualize.show_input(mmtxt);
   //visualize.show_diff(mmtxt);
   //visualize.show_corl(mmtxt);
 
 
   //TRACKER
+  println(frameRate);
+/*
   if (fd) {
     opencv.loadImage(video);
-    scale(0.5);
-    image(video, 0, height/2+400); 
+
+    image(video, 0, height/2); 
+*/
     // println(tracker.faceDetect(opencv));
-    if (tracker.faceDetect(opencv)) {
-
-      if (button[11].sw ==true) {
-        button[11].sw = false;
-      }
-
-      pinokio.moveWithTxtfile(1);
-    } else {
-      if (button[11].sw == false) {
-        button[11].sw = true;
-      }
-
-      pinokio.moveWithBezier();
-    }
-    scale(2);
-  }
+    //tracked = tracker.faceDetect(opencv);
+    //boolean tracked = false;
+    /*
+    if (tracked) {
+     if (button[11].sw ==true) {
+     button[11].sw = false;
+     }
+     pinokio.moveWithTxtfile(1);
+     } else {
+     if (button[11].sw == false) {
+     button[11].sw = true;
+     }
+     //pinokio.moveWithBezier();
+     }
+     */
+  //}
+  
 
 
 
@@ -166,8 +160,8 @@ void draw() {
   text("angleWaist : " + pinokio.angleWaist, 250, 20);
   text("angleNeck : " + pinokio.angleNeck, 250, 30);
   text("interval('v','b') : " + tmp_intvl, 250, 45);
-  text("ang1 : " + ang1, 250, 60);
-  text("ang2 : " + ang2, 250, 75);
+  text("ang1 : " + ctrlArd.angRoot, 250, 60);
+  text("ang2 : " + ctrlArd.angWaist, 250, 75);
 
   //GUI BUTTON
   for (int i=0; i<buttonNum; i++) {
@@ -229,13 +223,6 @@ void keyPressed() {
   }
   if (key == 'b') {
     tmp_intvl -=2;
-  }
-
-  if (key == 'd') {
-    neckAng += 10;
-  }
-  if (key == 'f') {
-    neckAng -=10;
   }
 }
 

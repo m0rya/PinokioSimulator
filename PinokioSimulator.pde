@@ -72,8 +72,6 @@ class Pinokio {
 
 
 
-
-
   //interactiveWithMouse with mouse
   boolean boolInteractiveWithMouse = true;
   void setOnInteractiveWithMouse(){
@@ -153,9 +151,10 @@ class Pinokio {
       mov[mem_cnt] = angleRoot + "/" + angleWaist + "/" + angleNeck;
 
       mem_cnt++;
+      println("recording");
 
       if (keyPressed && key == 'r') {
-        String fname = "mem_"+ str(memorize_count) + ".txt";
+        String fname = "data/mem_"+ str(memorize_count) + ".txt";
 
         mov[mem_cnt] = str(100);
         saveStrings(fname, mov);
@@ -231,7 +230,7 @@ class Pinokio {
     println("input end " + s);
   }
 
-  boolean mfi_b;
+  boolean mfi_b = false;
 
   void moveWithTxtfile(int num) {
     if (!mfi_b) {
@@ -242,11 +241,33 @@ class Pinokio {
     if (inmv_count < inpt_result.length) {
       angleRoot = inpt_result[inmv_count][0];
       angleWaist = inpt_result[inmv_count][1];
-      angleNeck = inpt_result[inmv_count][2];
+      //angleNeck = inpt_result[inmv_count][2];
 
       inmv_count++;
     } else {
       inmv_count =0;
+    }
+  }
+  
+   boolean moveWithTxtfileReturn(int num) {
+    if (!mfi_b) {
+      loadTxtfile(num);
+      mfi_b = true;
+    }
+
+    if (inmv_count < inpt_result.length) {
+      angleRoot = inpt_result[inmv_count][0];
+      angleWaist = inpt_result[inmv_count][1];
+      //angleNeck = inpt_result[inmv_count][2];
+      //println("PSimu: Root,Waist  :: " + angleRoot + " , " + angleWaist);
+
+      inmv_count++;
+      return false;
+    } else {
+      mfi_b = false;
+      inmv_count =0;
+      return true;
+      
     }
   }
 
